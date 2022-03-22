@@ -102,11 +102,12 @@ app.get("/admin", async (req,res)=>{
         const db=client.db("website");
         const collection=db.collection("message");
 
-        //取得所有留言，根據時間排序
+        //取得所有留言，根據時間排序，並顯示出最新的5筆留言
         let results = await collection.find({},{
             sort:{
                 time:-1
-            }
+            },
+            limit:5
         });
 
         let data=[];
@@ -130,10 +131,10 @@ app.post("/admin/addMessage", async (req,res)=>{
     }
     
     let umessage = req.body.message;
-    const db=client.db("website");
 
-    //決定要操作的集合
+    const db=client.db("website");
     const collection=db.collection("message");
+    
     await collection.insertOne({
         name:req.session["member"].name,
         email:req.session["member"].email,
